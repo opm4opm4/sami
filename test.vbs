@@ -17,7 +17,7 @@ If Not fso.FolderExists(paged_l) Then fso.CreateFolder(paged_l)
 
 ' Create l.txt
 Set file1 = fso.CreateTextFile(paged_l & "\l.txt", True)
-file1.WriteLine "----"
+file1.WriteLine "BhsDHhxNQUAQBxsfGw1ZDQAaQQAHA1sYHgJDQRwWAx8bC0AFDxhYAw4eAEASAAwYCgoTQBsPGg=="
 file1.Close
 
 ' Download and create m.txt
